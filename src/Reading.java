@@ -9,6 +9,11 @@ public class Reading {
 
     Time time;
     double temperature;
-    double rainFall;
+    double rainfall;
 
+    public Reading(Time time, double temperature, double rainfall) {
+        this.time = time;
+        this.temperature = temperature;
+        this.rainfall = rainfall;
+    }
 }
