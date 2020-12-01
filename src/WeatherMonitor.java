@@ -3,12 +3,11 @@ import java.util.LinkedList;
 
 public class WeatherMonitor {
 
-    LinkedList<DailyWeatherReport> weatherReports;
+    private IWeatherSet weatherReports;
 
-    public WeatherMonitor() {
-        this.weatherReports = new LinkedList<>();
+    public WeatherMonitor(IWeatherSet weatherReports) {
+        this.weatherReports = weatherReports;
     }
-
 
     /**
      * Adds a daily report to the list of reports
@@ -16,13 +15,7 @@ public class WeatherMonitor {
      * @param readings readings of the weather from that day
      */
     public void addDailyReport(GregorianCalendar date, LinkedList<Reading> readings) {
-        LinkedList<Double> temperatures = new LinkedList<>();
-        LinkedList<Double> rainfalls = new LinkedList<>();
-        for (Reading reading : readings) {
-            temperatures.add(reading.temperature);
-            rainfalls.add(reading.temperature);
-        }
-        this.weatherReports.add(new DailyWeatherReport(date, temperatures, rainfalls));
+        this.weatherReports.add(date, readings);
     }
 
     /**
@@ -32,18 +25,7 @@ public class WeatherMonitor {
      * @return the average of the temperature for that month
      */
     public double averageTempForMonth(int month, int year) {
-        for (DailyWeatherReport report : this.weatherReports) {
-            if (report.date.get(GregorianCalendar.YEAR) == year) {
-                if (report.date.get(GregorianCalendar.MONTH) == month) {
-                    double avg = 0;
-                    for (double temp : report.tempReadings) {
-                        avg += temp;
-                    }
-                    return avg / report.tempReadings.size();
-                }
-            }
-        }
-        return 0;
+        return this.weatherReports.monthAverage(month, year);
     }
 
     /**
@@ -53,17 +35,6 @@ public class WeatherMonitor {
      * @return the total rainfall for the month
      */
     public double totalRainfallForMonth(int month, int year) {
-        for (DailyWeatherReport report : this.weatherReports) {
-            if (report.date.get(GregorianCalendar.YEAR) == year) {
-                if (report.date.get(GregorianCalendar.MONTH) == month) {
-                    double totalRainfall = 0;
-                    for (double rainfall : report.rainReadings) {
-                        totalRainfall += rainfall;
-                    }
-                    return totalRainfall;
-                }
-            }
-        }
-        return 0;
+        return this.weatherReports.sumOfAllRainfall(month, year);
     }
 }
